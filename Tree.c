@@ -3,13 +3,15 @@
 #include <conio.h>
 #include "Tree.h"
 
-Ttree* tree_create(Ttree *root, int value){
+Ttree* tree_create(Ttree *incoming_root, int value){
 
     Ttree *root = malloc(sizeof(Ttree));
     root->value = value;
     root->parent_node = NULL;
     root->left_node = NULL;
     root->right_node = NULL;
+
+    return root;
 }
 
 Ttree* tree_addNode(Ttree *root, int value){
@@ -154,7 +156,7 @@ Ttree* tree_removeValue(Ttree *root, int value){
     }
     
     // У удаляемого узла два поддерева
-    Ttree *node_instead_remove_value, node_before_instead_value;
+    Ttree *node_instead_remove_value, *node_before_instead_value;
     if ((remove_value->left_node != NULL) && (remove_value->right_node != NULL))
     {
         node_instead_remove_value = function_return_node_toReplace_delete_value(remove_value);
@@ -162,13 +164,25 @@ Ttree* tree_removeValue(Ttree *root, int value){
         if (node_instead_remove_value->right_node == NULL)
         {
             node_before_instead_value = node_instead_remove_value->parent_node;
+            node_before_instead_value = NULL;
         }
         else{
-            node_before_instead_value->parent_node->left_node = node_before_remove_value->right_node;
+            node_before_instead_value = node_instead_remove_value->parent_node;
+            node_before_instead_value->left_node = node_instead_remove_value->right_node;
         }
-        free(remove_value)
+        free(remove_value);
     }
-    
+    return root;
+}
 
+void tree_printIn_forwardOrder(Ttree *root){
+    if (root == NULL)
+    {
+        return;
+    }
+    printf("%d ", root->value);
+
+    tree_printIn_forwardOrder(root->left_node);
+    tree_printIn_forwardOrder(root->right_node);
 }
     
